@@ -24,7 +24,7 @@ import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
-public class HomeTimeline extends AppCompatActivity {
+public class HomeTimelineActivity extends AppCompatActivity {
 
     private static final String TAG = "ActivityHomeTimeline";
     private RestClient client;
@@ -41,13 +41,33 @@ public class HomeTimeline extends AppCompatActivity {
         tweetArrayList = new ArrayList<Tweet>();
         adapter = new HomeTimelineArrayAdapter(getBaseContext(),R.layout.item_tweet,tweetArrayList);
         lvHomeTimeline.setAdapter(adapter);
+        lvHomeTimeline.setOnScrollListener(new EndlessScrollListener() {
+            @Override
+            public boolean onLoadMore(int page, int totalItemsCount) {
+                client.getHomeTimeline(25,Long.parseLong(adapter.getItem(totalItemsCount-1).getId()),new JsonHttpResponseHandler(){
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                        adapter.addAll(Tweet.fromJson(response));
+                    }
 
-        populateTimeline();
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+
+                    }
+                });
+                return true;
+            }
+        });
+        populateTimeline(25);
+    }
+
+    private void populateTimeline(int count) {
+        populateTimeline(count,null);
     }
 
 
-    private void populateTimeline(){
-        client.getHomeTimeline(new JsonHttpResponseHandler(){
+    private void populateTimeline(int count, Long max_id){
+        client.getHomeTimeline(count, max_id ,new JsonHttpResponseHandler(){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 adapter.addAll(Tweet.fromJson(response));
@@ -83,10 +103,10 @@ public class HomeTimeline extends AppCompatActivity {
             }
 
             holder = (ViewHolder) convertView.getTag();
-            holder.txCreatedAt.setText(tweet.getCreated_at().toString());
+            holder.txCreatedAt.setText(Utlity.toFriendlyTimestamp(tweet.getCreated_at()));
             holder.txContent.setText(tweet.getText());
             holder.txScreenName.setText(tweet.getUser().getScreen_name());
-            holder.txName.setText(tweet.getUser().getName());
+            holder.txName.setText(String.format("@%s", tweet.getUser().getName()));
             Picasso.with(getContext()).load(tweet.getUser().getProfile_image_url_https()).noFade().fit().into(holder.ivProfileImage);
             return convertView;
         }

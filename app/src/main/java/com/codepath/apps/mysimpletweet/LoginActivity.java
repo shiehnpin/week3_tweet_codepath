@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
-import android.widget.Toast;
 
 import com.codepath.oauth.OAuthLoginActionBarActivity;
 
@@ -28,7 +27,7 @@ public class LoginActivity extends OAuthLoginActionBarActivity<RestClient> {
 	// i.e Display application "homepage"
 	@Override
 	public void onLoginSuccess() {
-		Intent i = new Intent(this, HomeTimeline.class);
+		Intent i = new Intent(this, HomeTimelineActivity.class);
 		startActivity(i);
 		finish();
 	}

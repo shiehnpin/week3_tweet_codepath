@@ -133,6 +133,10 @@ public class Tweet extends BaseModel {
 				", user=" + user +
 				'}';
 	}
+
+	public String getId() {
+		return id;
+	}
 }
 
 

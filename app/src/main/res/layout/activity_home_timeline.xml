@@ -4,7 +4,7 @@
     android:id="@+id/activity_home_timeline"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.codepath.apps.mysimpletweet.HomeTimeline">
+    tools:context="com.codepath.apps.mysimpletweet.HomeTimelineActivity">
 
     <ListView
         android:layout_width="match_parent"
