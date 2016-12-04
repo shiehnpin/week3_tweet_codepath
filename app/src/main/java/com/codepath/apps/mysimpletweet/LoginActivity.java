@@ -28,8 +28,9 @@ public class LoginActivity extends OAuthLoginActionBarActivity<RestClient> {
 	// i.e Display application "homepage"
 	@Override
 	public void onLoginSuccess() {
-		 Intent i = new Intent(this, HomeTimeline.class);
-		 startActivity(i);
+		Intent i = new Intent(this, HomeTimeline.class);
+		startActivity(i);
+		finish();
 	}
 
 	// OAuth authentication flow failed, handle the error
