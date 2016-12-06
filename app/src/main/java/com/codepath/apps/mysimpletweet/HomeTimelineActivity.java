@@ -42,9 +42,18 @@ public class HomeTimelineActivity extends AppCompatActivity {
         adapter = new HomeTimelineArrayAdapter(getBaseContext(),R.layout.item_tweet,tweetArrayList);
         lvHomeTimeline.setAdapter(adapter);
         lvHomeTimeline.setOnScrollListener(new EndlessScrollListener() {
+
+            private long getMaxId(int totalItemsCount){
+                try {
+                    return Long.parseLong(adapter.getItem(totalItemsCount - 1).getId()) - 1;
+                } catch (NullPointerException e){
+                    return 0;
+                }
+            }
+
             @Override
             public boolean onLoadMore(int page, int totalItemsCount) {
-                client.getHomeTimeline(25,Long.parseLong(adapter.getItem(totalItemsCount-1).getId()),new JsonHttpResponseHandler(){
+                client.getHomeTimeline(Constant.REQUEST_TWEETS_COUNT,getMaxId(totalItemsCount),new JsonHttpResponseHandler(){
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                         adapter.addAll(Tweet.fromJson(response));
@@ -58,7 +67,14 @@ public class HomeTimelineActivity extends AppCompatActivity {
                 return true;
             }
         });
-        populateTimeline(25);
+
+//        populateTimeline(Constant.REQUEST_TWEETS_COUNT);
+        if(Tweet.countItems() == 0) {
+            populateTimeline(25);
+        }else{
+            adapter.addAll(Tweet.recentItems());
+        }
+
     }
 
     private void populateTimeline(int count) {
@@ -70,7 +86,8 @@ public class HomeTimelineActivity extends AppCompatActivity {
         client.getHomeTimeline(count, max_id ,new JsonHttpResponseHandler(){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                adapter.addAll(Tweet.fromJson(response));
+                Tweet.fromJson(response);
+                adapter.addAll(Tweet.recentItems());
             }
 
             @Override

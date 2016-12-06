@@ -37,13 +37,14 @@ public class Tweet extends BaseModel {
 	String id;
 
 	@Column
-	private String text;
+	String text;
 
 	@Column
-	private Date created_at;
+	Date created_at;
 
+	@Column
 	@ForeignKey(saveForeignKeyModel =  false)
-	private User user;
+	User user;
 
 	public Tweet() {
 		super();
@@ -77,6 +78,7 @@ public class Tweet extends BaseModel {
 
 			Tweet tweet = new Tweet(tweetJson);
 			tweet.save();
+			tweet.user.save();
 			tweets.add(tweet);
 
 			Log.v(TAG,tweetJson.toString());
@@ -88,12 +90,16 @@ public class Tweet extends BaseModel {
 
 
 	// Record Finders
-	public static Tweet byId(long id) {
-		return new Select().from(Tweet.class).where(SampleModel_Table.id.eq(id)).querySingle();
+	public static Tweet byId(String id) {
+		return new Select().from(Tweet.class).where(Tweet_Table.id.eq(id)).querySingle();
 	}
 
 	public static List<Tweet> recentItems() {
-		return new Select().from(Tweet.class).orderBy(SampleModel_Table.id, false).limit(300).queryList();
+		return new Select().from(Tweet.class).orderBy(Tweet_Table.id, false).limit(300).queryList();
+	}
+
+	public static long countItems(){
+		return new Select().from(Tweet.class).count();
 	}
 
 	public String getText() {

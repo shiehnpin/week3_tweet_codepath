@@ -37,7 +37,7 @@ public class RestClient extends OAuthBaseClient {
 		RequestParams params = new RequestParams();
 		params.put("count",count);
 		if(max_id!=null) {
-			params.put("max_id", max_id - 1);
+			params.put("max_id", max_id);
 		}
 		client.get(apiUrl,params,handler);
 	}
