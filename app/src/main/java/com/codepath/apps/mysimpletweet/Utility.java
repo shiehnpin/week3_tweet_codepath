@@ -8,9 +8,8 @@ import java.util.Locale;
 /**
  * Created by Chjeng-Lun SHIEH on 2016/12/5.
  */
-public class Utlity {
+public class Utility {
     static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("M月d日",Locale.getDefault());
-    static Date now = new Date();
 
     //TODO should use i18n
     public static String toFriendlyTimestamp(Date created_at) {
@@ -45,6 +44,6 @@ public class Utlity {
             //Return n秒
             return elapsedSeconds+"秒";
         }
-        return "???";
+        return "剛剛";
     }
 }

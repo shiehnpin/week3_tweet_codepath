@@ -146,7 +146,7 @@ public class HomeTimelineActivity extends AppCompatActivity implements OnTweetSu
             }
 
             holder = (ViewHolder) convertView.getTag();
-            holder.txCreatedAt.setText(Utlity.toFriendlyTimestamp(tweet.getCreated_at()));
+            holder.txCreatedAt.setText(Utility.toFriendlyTimestamp(tweet.getCreated_at()));
             try {
                 holder.txContent.setText(URLDecoder.decode(tweet.getText(),"utf8"));
             } catch (UnsupportedEncodingException e) {

@@ -108,7 +108,7 @@ public class ComposeFragment extends DialogFragment {
                         tweet.getUser().save();
                         if(listener!=null) {
                             listener.onCreateSuccess(tweet.getId());
-                            dismiss();
+                            listener = null;
                         }
                     }
 
