@@ -3,5 +3,6 @@
 
     <string name="app_name">My Simple Tweet</string>
     <string name="login_label">Log in Twitter</string>
+    <string name="action_compose">Compose</string>
 
 </resources>

@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -68,9 +69,9 @@ public class HomeTimelineActivity extends AppCompatActivity {
             }
         });
 
-//        populateTimeline(Constant.REQUEST_TWEETS_COUNT);
+        //Todo Workaround
         if(Tweet.countItems() == 0) {
-            populateTimeline(25);
+            populateTimeline(Constant.REQUEST_TWEETS_COUNT);
         }else{
             adapter.addAll(Tweet.recentItems());
         }
@@ -95,6 +96,12 @@ public class HomeTimelineActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.home_timeline,menu);
+        return true;
     }
 
     private class HomeTimelineArrayAdapter extends ArrayAdapter<Tweet>{
