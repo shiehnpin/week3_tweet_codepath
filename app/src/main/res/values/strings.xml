@@ -5,4 +5,8 @@
     <string name="login_label">Log in Twitter</string>
     <string name="action_compose">Compose</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="fragment_compose_title">Compose</string>
+
 </resources>

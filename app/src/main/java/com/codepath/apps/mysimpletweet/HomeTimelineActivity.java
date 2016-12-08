@@ -2,10 +2,12 @@ package com.codepath.apps.mysimpletweet;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -20,12 +22,14 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
-public class HomeTimelineActivity extends AppCompatActivity {
+public class HomeTimelineActivity extends AppCompatActivity implements OnTweetSuccessListener{
 
     private static final String TAG = "ActivityHomeTimeline";
     private RestClient client;
@@ -104,6 +108,21 @@ public class HomeTimelineActivity extends AppCompatActivity {
         return true;
     }
 
+    public void actionCompose(MenuItem item) {
+        showComposeDialog();
+    }
+
+    private void showComposeDialog() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        ComposeFragment composeFragment = ComposeFragment.newInstance();
+        composeFragment.show(fragmentManager,"frag_compose");
+    }
+
+    @Override
+    public void onCreateSuccess(String id) {
+        adapter.insert(Tweet.byId(id),0);
+    }
+
     private class HomeTimelineArrayAdapter extends ArrayAdapter<Tweet>{
         public HomeTimelineArrayAdapter(Context context, int textViewResourceId, List<Tweet> objects) {
             super(context, textViewResourceId, objects);
@@ -128,9 +147,13 @@ public class HomeTimelineActivity extends AppCompatActivity {
 
             holder = (ViewHolder) convertView.getTag();
             holder.txCreatedAt.setText(Utlity.toFriendlyTimestamp(tweet.getCreated_at()));
-            holder.txContent.setText(tweet.getText());
-            holder.txScreenName.setText(tweet.getUser().getScreen_name());
-            holder.txName.setText(String.format("@%s", tweet.getUser().getName()));
+            try {
+                holder.txContent.setText(URLDecoder.decode(tweet.getText(),"utf8"));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            holder.txScreenName.setText(String.format("@%s", tweet.getUser().getScreen_name()));
+            holder.txName.setText(tweet.getUser().getName());
             Picasso.with(getContext()).load(tweet.getUser().getProfile_image_url_https()).noFade().fit().into(holder.ivProfileImage);
             return convertView;
         }

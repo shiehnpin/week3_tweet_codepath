@@ -14,7 +14,7 @@ public class Utlity {
 
     //TODO should use i18n
     public static String toFriendlyTimestamp(Date created_at) {
-        long different = now.getTime() - created_at.getTime();
+        long different = new Date().getTime() - created_at.getTime();
 
         long secondsInMilli = 1000;
         long minutesInMilli = secondsInMilli * 60;
