@@ -1,6 +1,5 @@
 package com.codepath.apps.mysimpletweet.models;
 
-import com.codepath.apps.mysimpletweet.MyTweetDatabase;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ManyToMany;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
@@ -9,14 +8,13 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.text.ParseException;
+import org.parceler.Parcel;
 
 /**
  * Created by Chjeng-Lun SHIEH on 2016/12/4.
  */
 @Table(database = MyTweetDatabase.class)
-@ManyToMany(referencedTable = Tweet.class)
+@Parcel(analyze={User.class})   // add Parceler annotation here
 public class User extends BaseModel {
 
     @PrimaryKey
@@ -24,13 +22,14 @@ public class User extends BaseModel {
     String id;
 
     @Column
-    private String name;
+    String name;
 
     @Column
-    private String screen_name;
+    String screen_name;
 
     @Column
-    private String profile_image_url_https;
+    String profile_image_url_https;
+
 
     public User(){
         super();

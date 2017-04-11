@@ -2,7 +2,6 @@ package com.codepath.apps.mysimpletweet.models;
 
 import android.util.Log;
 
-import com.codepath.apps.mysimpletweet.MyTweetDatabase;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
@@ -13,6 +12,7 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcel;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -25,12 +25,12 @@ import java.util.Locale;
 //		User should be displayed the username, name, and body for each tweet
 //		User should be displayed the relative timestamp for each tweet "8m", "7h"
 //		User can view more tweets as they scroll with infinite pagination
-
+@Parcel(analyze={Tweet.class})   // add Parceler annotation here
 @Table(database = MyTweetDatabase.class)
 public class Tweet extends BaseModel {
 
 	private static final String TAG = "TweetModel";
-	private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy", Locale.ENGLISH);
+	private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZZZ yyyy", Locale.ENGLISH);
 
 	@PrimaryKey
 	@Column
@@ -43,8 +43,10 @@ public class Tweet extends BaseModel {
 	Date created_at;
 
 	@Column
-	@ForeignKey(saveForeignKeyModel =  false)
-	User user;
+	String user;
+
+	@ForeignKey(tableClass = Entity.class)
+	Entity entities;
 
 	public Tweet() {
 		super();
@@ -58,7 +60,8 @@ public class Tweet extends BaseModel {
 			this.id = object.getString("id_str");
 			this.text = object.getString("text");
 			this.created_at = simpleDateFormat.parse(object.getString("created_at"));
-			this.user = new User(object.getJSONObject("user"));
+			this.user = object.getString("user");
+			this.entities = new Entity(object.getJSONObject("entities"),id);
 		} catch (JSONException | ParseException e) {
 			e.printStackTrace();
 		}
@@ -78,10 +81,9 @@ public class Tweet extends BaseModel {
 
 			Tweet tweet = new Tweet(tweetJson);
 			tweet.save();
-			tweet.user.save();
+			tweet.entities.save();
 			tweets.add(tweet);
 
-			Log.v(TAG,tweetJson.toString());
 			Log.d(TAG,tweet.toString());
 		}
 
@@ -110,8 +112,12 @@ public class Tweet extends BaseModel {
 		return created_at;
 	}
 
-	public User getUser() {
+	public String getUser() {
 		return user;
+	}
+
+	public void setUser(String user) {
+		this.user = user;
 	}
 
 	public void setId(String id) {
@@ -126,8 +132,12 @@ public class Tweet extends BaseModel {
 		this.created_at = created_at;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public Entity getEntities() {
+		return entities;
+	}
+
+	public void setEntities(Entity entities) {
+		this.entities = entities;
 	}
 
 	@Override

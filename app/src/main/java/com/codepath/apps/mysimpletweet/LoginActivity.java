@@ -28,6 +28,7 @@ public class LoginActivity extends OAuthLoginActionBarActivity<RestClient> {
 	@Override
 	public void onLoginSuccess() {
 		Intent i = new Intent(this, HomeTimelineActivity.class);
+		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		startActivity(i);
 		finish();
 	}
